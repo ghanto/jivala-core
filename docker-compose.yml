@@ -1,20 +1,39 @@
-version: "3.6"
+version: "3.4"
 
 services:
-  db:
-    image: postgres:12.3-alpine
-    restart: always
-    environment:
-      POSTGRES_DB: jivala
-      POSTGRES_USER: jivala
-      POSTGRES_PASSWORD: jivala
+  app:
+    image: golang:1.14.5-alpine3.12
+    working_dir: /app
+    depends_on:
+      - database
     volumes:
-      - db-data:/var/lib/postgresql/data
+      - .netrc:/root/.netrc
+      - .:/app
+      - pkg:/go/pkg
     ports:
-      - 5432:5432
+      - "5411:5411"
+    env_file:
+      - _env
+    command: ["wait-for-ports", "go", "run", "cmd/jivala-core/main.go"]
+
+  database:
+    image: postgres:11.5-alpine
+    environment:
+      - POSTGRES_USER=dbuser
+      - POSTGRES_PASSWORD=dbpass
+      - POSTGRES_DB=jivala-core
+    ports:
+      - "5432:5432"
+
+  migration:
+    image: "migrate/migrate"
+    depends_on:
+      - database
+    volumes:
+      - ./resources/migrations:/migration
+    env_file:
+      - _env
+    command: -path /migration -database postgres://dbuser:dbpass@database:5432/jivala-core?sslmode=disable -verbose up
 
 volumes:
-  db-data: {}
-
-
-
+  pkg:
