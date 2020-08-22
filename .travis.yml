@@ -1,0 +1,12 @@
+language: minimal
+
+cache:
+  directories:
+    - .pkg
+
+services:
+  - docker
+
+script:
+  - docker-compose run --rm migration
+  - ./scripts/test

@@ -2,19 +2,18 @@ version: "3.4"
 
 services:
   app:
-    image: golang:1.14.5-alpine3.12
+    image: golang:1.14
     working_dir: /app
     depends_on:
       - database
     volumes:
-      - .netrc:/root/.netrc
       - .:/app
       - pkg:/go/pkg
     ports:
       - "5411:5411"
     env_file:
       - _env
-    command: ["wait-for-ports", "go", "run", "cmd/jivala-core/main.go"]
+    command: ["go", "run", "cmd/jivala-core/main.go"]
 
   database:
     image: postgres:11.5-alpine

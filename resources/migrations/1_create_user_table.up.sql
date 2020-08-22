@@ -1,3 +1,5 @@
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
 create table if not exists "user"
 (
     id uuid     default uuid_generate_v4() constraint user_pk primary key,
