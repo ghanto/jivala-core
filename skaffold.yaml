@@ -1,0 +1,16 @@
+apiVersion: skaffold/v1beta2
+kind: Config
+build:
+  local:
+    push: false
+  artifacts:
+    - image: ghanto/jivala-core
+      context: server
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        'cmd/jivala-core/main.go': .
+deploy:
+  kubectl:
+    manifests:
+      - k8s/server-deployment.yaml
