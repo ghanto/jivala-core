@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 	"testing"
-	"time"
 
 	"github.com/Masterminds/squirrel"
+	"github.com/ghanto/jivala-core/pkg/user/domain/user"
 	"github.com/ghanto/jivala-core/pkg/util"
 )
 
@@ -20,10 +20,10 @@ func TestUserRepo_Create(t *testing.T) {
 	repo := NewUserRepository(db, &qb)
 	util.EmptyTable(ctx, db, UserTable)
 
-	recordsToCreate := []*CreateUserDb{
-		{Email: "chuck@norris.com", Login: "chuck", Password: "secret_password", CreatedAt: time.Now()},
-		{Email: "sean@doe.com", Login: "sean", Password: "secret_password", CreatedAt: time.Now()},
-		{Email: "jack@sparrow.com", Login: "jack", Password: "secret_password", CreatedAt: time.Now()},
+	recordsToCreate := []*user.User{
+		{Email: "chuck@norris.com", Login: "chuck", Password: "secret_password"},
+		{Email: "sean@doe.com", Login: "sean", Password: "secret_password"},
+		{Email: "jack@sparrow.com", Login: "jack", Password: "secret_password"},
 	}
 
 	for _, tc := range recordsToCreate {

@@ -15,8 +15,3 @@ type User struct {
 	Email    string
 	Password string
 }
-
-type CreateUser struct {
-	Login string
-	Email string
-}

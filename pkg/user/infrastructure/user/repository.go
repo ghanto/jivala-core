@@ -3,14 +3,14 @@ package user
 import (
 	"context"
 
-	"github.com/jmoiron/sqlx"
-
 	sqb "github.com/Masterminds/squirrel"
+	"github.com/ghanto/jivala-core/pkg/user/domain/user"
+	"github.com/jmoiron/sqlx"
 )
 
 type Repository interface {
-	Create(ctx context.Context, dto *CreateUserDb) (*UserDB, error)
-	GetByEmail(ctx context.Context, email string) (*UserDB, error)
+	Create(ctx context.Context, dto *user.User) (*user.User, error)
+	GetByEmail(ctx context.Context, email string) (*user.User, error)
 }
 
 type userRepo struct {
@@ -25,7 +25,7 @@ func NewUserRepository(db *sqlx.DB, qb *sqb.StatementBuilderType) Repository {
 	}
 }
 
-func (r *userRepo) Create(ctx context.Context, dto *CreateUserDb) (*UserDB, error) {
+func (r *userRepo) Create(ctx context.Context, dto *user.User) (*user.User, error) {
 	q, args, err := r.qb.Insert(UserTable).
 		Columns("login", "password", "email").
 		Values(dto.Login, dto.Password, dto.Email).
@@ -33,18 +33,19 @@ func (r *userRepo) Create(ctx context.Context, dto *CreateUserDb) (*UserDB, erro
 		ToSql()
 
 	if err != nil {
-		return &UserDB{}, err
+		return &user.User{}, err
 	}
 
 	userDB := UserDB{}
 	if err := r.db.QueryRowx(q, args...).StructScan(&userDB); err != nil {
-		return &UserDB{}, err
+		return &user.User{}, err
 	}
 
-	return &userDB, nil
+	return userDB.ToModel(), nil
+	return userDB.ToModel(), nil
 }
 
-func (r *userRepo) GetByEmail(ctx context.Context, email string) (*UserDB, error) {
+func (r *userRepo) GetByEmail(ctx context.Context, email string) (*user.User, error) {
 	sQuery := r.qb.Select("id", "email").From(UserTable).Where(sqb.Eq{"email": email})
 	sql, args, err := sQuery.ToSql()
 
@@ -59,5 +60,5 @@ func (r *userRepo) GetByEmail(ctx context.Context, email string) (*UserDB, error
 		return nil, err
 	}
 
-	return &usr, nil
+	return usr.ToModel(), nil
 }
