@@ -12,23 +12,23 @@ import (
 
 func TestService_Register(t *testing.T) {
 	testCases := map[string]struct {
-		given       *user.User
+		given       user.User
 		givenErr    error
 		expectedRet *user.User
 		expectedErr error
 	}{
 		"all good": {
-			given: &user.User{
+			given: user.User{
 				Email:    "testuser1",
 				Password: "fff",
 			},
 			expectedRet: &user.User{
 				Email:    "testuser1",
-				Password: "tbd",
+				Password: "fff",
 			},
 		},
 		"repository errors": {
-			given: &user.User{
+			given: user.User{
 				Email:    "testuser2",
 				Password: "tbd",
 			},
@@ -39,7 +39,7 @@ func TestService_Register(t *testing.T) {
 
 	for _, tc := range testCases {
 		ctx := context.Background()
-		repo := NewMockRepo(tc.givenErr, tc.given)
+		repo := NewMockRepo(tc.givenErr, &tc.given)
 		s := NewService(repo)
 
 		u, err := s.Register(ctx, tc.given)

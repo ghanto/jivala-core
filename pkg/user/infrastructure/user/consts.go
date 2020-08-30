@@ -1,5 +1,5 @@
 package user
 
 const (
-	UserTable = "public.user"
+	UserTable = `"user"`
 )

@@ -11,19 +11,19 @@ type UserService interface {
 	GetByEmail(ctx context.Context, email string) (*user.User, error)
 }
 
-type Service struct {
+type service struct {
 	repo userRepo
 }
 
-func NewService(ur userRepo) Service {
-	return Service{repo: ur}
+func NewService(ur userRepo) UserService {
+	return &service{repo: ur}
 }
 
-func (s *Service) Register(ctx context.Context, dto *user.User) (*user.User, error) {
+func (s *service) Register(ctx context.Context, dto user.User) (*user.User, error) {
 	password := "tbd"
 	dto.Password = password
 
-	u, err := s.repo.Create(ctx, dto)
+	u, err := s.repo.Create(ctx, &dto)
 	if err != nil {
 		return nil, err
 	}
@@ -31,7 +31,7 @@ func (s *Service) Register(ctx context.Context, dto *user.User) (*user.User, err
 	return u, nil
 }
 
-func (s *Service) GetByEmail(ctx context.Context, email string) (*user.User, error) {
+func (s *service) GetByEmail(ctx context.Context, email string) (*user.User, error) {
 	u, err := s.repo.GetByEmail(ctx, email)
 
 	if err != nil {

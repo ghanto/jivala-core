@@ -9,14 +9,12 @@ import (
 
 type UserDB struct {
 	Id        uuid.UUID `db:"id"`
-	Login     string    `db:"login"`
 	Email     string    `db:"email"`
 	Password  string    `db:"password"`
 	CreatedAt time.Time `db:"created_at"`
 }
 
 type CreateUserDb struct {
-	Login     string
 	Email     string
 	Password  string
 	CreatedAt time.Time
@@ -24,9 +22,9 @@ type CreateUserDb struct {
 
 func (u *UserDB) ToModel() *user.User {
 	return &user.User{
-		ID:       u.Id,
-		Login:    u.Login,
-		Email:    u.Email,
-		Password: u.Password,
+		ID:        u.Id,
+		Email:     u.Email,
+		Password:  u.Password,
+		CreatedAt: &u.CreatedAt,
 	}
 }

@@ -21,9 +21,9 @@ func TestUserRepo_Create(t *testing.T) {
 	util.EmptyTable(ctx, db, UserTable)
 
 	recordsToCreate := []*user.User{
-		{Email: "chuck@norris.com", Login: "chuck", Password: "secret_password"},
-		{Email: "sean@doe.com", Login: "sean", Password: "secret_password"},
-		{Email: "jack@sparrow.com", Login: "jack", Password: "secret_password"},
+		{Email: "chuck@norris.com", Password: "secret_password"},
+		{Email: "sean@doe.com", Password: "secret_password"},
+		{Email: "jack@sparrow.com", Password: "secret_password"},
 	}
 
 	for _, tc := range recordsToCreate {

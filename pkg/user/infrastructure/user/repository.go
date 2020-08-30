@@ -27,8 +27,8 @@ func NewUserRepository(db *sqlx.DB, qb *sqb.StatementBuilderType) Repository {
 
 func (r *userRepo) Create(ctx context.Context, dto *user.User) (*user.User, error) {
 	q, args, err := r.qb.Insert(UserTable).
-		Columns("login", "password", "email").
-		Values(dto.Login, dto.Password, dto.Email).
+		Columns("password", "email").
+		Values(dto.Password, dto.Email).
 		Suffix("RETURNING *").
 		ToSql()
 
@@ -42,11 +42,10 @@ func (r *userRepo) Create(ctx context.Context, dto *user.User) (*user.User, erro
 	}
 
 	return userDB.ToModel(), nil
-	return userDB.ToModel(), nil
 }
 
 func (r *userRepo) GetByEmail(ctx context.Context, email string) (*user.User, error) {
-	sQuery := r.qb.Select("id", "email").From(UserTable).Where(sqb.Eq{"email": email})
+	sQuery := r.qb.Select("id", "email", "created_at").From(UserTable).Where(sqb.Eq{"email": email})
 	sql, args, err := sQuery.ToSql()
 
 	if err != nil {

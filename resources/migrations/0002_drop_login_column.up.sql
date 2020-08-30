@@ -1,0 +1,1 @@
+ALTER table "user" DROP COLUMN "login"
